@@ -1,0 +1,11 @@
+# Ignore pycache files
+__pycache__/
+
+# Ignore SQLite database file
+artrelic.db
+
+# Ignore artrelicvenv folders
+artrelicvenv/
+
+# Ignore .gitignore file also
+#.gitignore
