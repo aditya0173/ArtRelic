@@ -42,7 +42,7 @@ def create_users_table():
             "status": "error",
             "message": f"Error while creating Users table: {e}"
         }
-
+        
     finally:
         if connection:
             connection.close()  # Close connection here
