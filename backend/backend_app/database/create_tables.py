@@ -10,12 +10,22 @@ def create_users_table():
     cursor = connection.cursor()
 
     create_table_query = """
-    CREATE TABLE IF NOT EXISTS Users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
-    );
+    CREATE TABLE IF NOT EXISTS users (
+        user_id varchar(255),
+        created_at timestamp,
+        user_name varchar(255),
+        eamil varchar(255),
+        phone varchar(255),
+        region varchar(255),
+        field_of_intrest text,
+        field_of_resarch text,
+        currently_working text,
+        graduaction_type varchar(255),
+        graduaction_year year,
+        graduaction_cource text,
+        projects varchar(255),
+        project_description text
+        );
     """
     
     try:
@@ -32,7 +42,7 @@ def create_users_table():
             "status": "error",
             "message": f"Error while creating Users table: {e}"
         }
-
+        
     finally:
         if connection:
             connection.close()  # Close connection here
