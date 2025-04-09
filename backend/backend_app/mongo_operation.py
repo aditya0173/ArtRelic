@@ -3,6 +3,7 @@ import pymongo # type: ignore
 
 # insert users
 def insert_users(users):
+    """Inserts an users into the 'users' collection."""
 
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     db = client["relic"]
@@ -14,7 +15,6 @@ def insert_users(users):
         print("Collection 'users' created successfully.")
     else:
         print("Connected to existing collection 'users'.")
-    """Inserts an users into the 'users' collection."""
 
     try:
         db.users.insert_one(users)
