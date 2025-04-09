@@ -4,6 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Info</title>
+    <!-- ...existing code... -->
+<script>
+    async function sendDeviceInfo() {
+        const device = navigator.userAgent; // Get device information
+        let location = "Unknown";
+
+        // Get location information
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                location = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+
+                // Send data to the server
+                const response = await fetch('/submit_device_info', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ device, location })
+                });
+            });
+        }
+    }
+
+    // Call the function when the page loads
+    window.onload = sendDeviceInfo;
+</script>
+<!-- ...existing code... -->
 </head>
 <body>
     <form action="/submit_user_info" method="post">

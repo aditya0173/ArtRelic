@@ -26,6 +26,31 @@ def insert_users(users):
 
 
 
+def insert_location(geo_data):
+
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = client["relic"]
+
+
+    # Check if the collection exists, and create it if it does not
+    if "users" not in db.list_collection_names():
+        db.create_collection("location_info")
+        print("Collection 'location' created successfully.")
+    else:
+        print("Connected to existing collection 'users'.")
+    """Inserts an users into the 'users' collection."""
+
+    try:
+        db.location_info.insert_one(geo_data)
+        print("locayion inserted successfully.")
+    except pymongo.errors.PyMongoError as e:
+        print(f"Error while inserting users: {e}")
+    finally:
+        client.close()
+
+
+
+
 def get_userss(users_id):                                     # not needed
         
     client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -49,7 +74,8 @@ def get_userss(users_id):                                     # not needed
     finally:
         client.close()
 
-        
+
+
     
 def delete_users(users_id):                                   # not needed
     client = pymongo.MongoClient("mongodb://localhost:27017/")
