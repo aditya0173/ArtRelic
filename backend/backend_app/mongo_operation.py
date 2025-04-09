@@ -1,7 +1,7 @@
 import pymongo
 
 
-
+# insert users
 def insert_users(users):
     """Inserts an users into the 'users' collection."""
 
