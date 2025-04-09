@@ -7,13 +7,13 @@ app.secret_key = 'your_secret_key'  # Required for flash messages
 
 @app.route('/')
 def home():
-    
     return render_template('index.html')
+
+
 
 @app.route('/submit_user_info', methods=['POST'])
 def submit_user_info():
     data = request.form
-    user_id = data.get('user_id')
     created_at = datetime.datetime.now()
     user_name = data.get('user_name')
     date_of_birth = data.get('date_of_birth')
