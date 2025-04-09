@@ -1,7 +1,7 @@
 import pymongo
 
 
-
+# insert users
 def insert_users(users):
 
     client = pymongo.MongoClient("mongodb://localhost:27017/")
