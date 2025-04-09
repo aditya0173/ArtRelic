@@ -1,15 +1,11 @@
-import pymongo # type: ignore
+import pymongo
 
-
-# insert users
+# Create & Insert Users
 def insert_users(users):
-    """Inserts an users into the 'users' collection."""
-
+    """Inserts a user into the 'users' collection."""
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     db = client["relic"]
 
-
-    # Check if the collection exists, and create it if it does not
     if "users" not in db.list_collection_names():
         db.create_collection("users")
         print("Collection 'users' created successfully.")
@@ -18,81 +14,63 @@ def insert_users(users):
 
     try:
         db.users.insert_one(users)
-        print("users inserted successfully.")
+        print("User inserted successfully.")
     except pymongo.errors.PyMongoError as e:
-        print(f"Error while inserting users: {e}")
+        print(f"Error while inserting user: {e}")
     finally:
         client.close()
 
 
-
+# Create & Insert Location
 def insert_location(geo_data):
-    """Inserts an users location into the 'users' collection."""
-
+    """Inserts location data into the 'location_info' collection."""
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     db = client["relic"]
 
-
-    # Check if the collection exists, and create it if it does not
-    if "users" not in db.list_collection_names():
+    if "location_info" not in db.list_collection_names():
         db.create_collection("location_info")
-        print("Collection 'location' created successfully.")
+        print("Collection 'location_info' created successfully.")
     else:
-        print("Connected to existing collection 'users'.")
+        print("Connected to existing collection 'location_info'.")
 
     try:
         db.location_info.insert_one(geo_data)
-        print("locayion inserted successfully.")
+        print("Location inserted successfully.")
     except pymongo.errors.PyMongoError as e:
-        print(f"Error while inserting users: {e}")
+        print(f"Error while inserting location: {e}")
     finally:
         client.close()
 
 
-
-
-def get_userss(users_id):                                     # not needed
-        
+# Get Users Id
+def get_user_by_id(users_id):
+    """Returns a user from the 'users' collection by user_id."""
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     db = client["relic"]
 
-    # Check if the collection exists, and create it if it does not
-    if "users" not in db.list_collection_names():
-        db.create_collection("artoifact")
-        print("Collection 'users' created successfully.")
-    else:
-        print("Connected to existing collection 'users'.")
-
-
-    """Returns all userss from the 'users' collection."""   
     try:
-        userss = db.users.find({'users_id': users_id},{})
-        return userss
+        user = db.users.find_one({'users_id': users_id})
+        return user
     except pymongo.errors.PyMongoError as e:
-        print(f"Error while fetching userss: {e}")
+        print(f"Error while fetching user: {e}")
         return None
     finally:
         client.close()
 
 
-
-    
-def delete_users(users_id):                                   # not needed
+# Update/Delete Users
+def delete_user(users_id):
+    """Deletes a user from the 'users' collection."""
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     db = client["relic"]
 
-    # Check if the collection exists, and create it if it does not
-    if "users" not in db.list_collection_names():
-        db.create_collection("artoifact")
-        print("Collection 'users' created successfully.")
-    else:
-        print("Connected to existing collection 'users'.")
-
-    """Deletes an users from the 'users' collection."""
     try:
-        db.users.delete_one({'users_id': users_id})
-        print("users deleted successfully.")
+        result = db.users.delete_one({'users_id': users_id})
+        if result.deleted_count > 0:
+            print("User deleted successfully.")
+        else:
+            print("User not found.")
     except pymongo.errors.PyMongoError as e:
-        print(f"Error while deleting users: {e}")
+        print(f"Error while deleting user: {e}")
     finally:
         client.close()
