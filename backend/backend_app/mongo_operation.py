@@ -10,7 +10,7 @@ def insert_users(users):
 
     # Check if the collection exists, and create it if it does not
     if "users" not in db.list_collection_names():
-        db.create_collection("artoifact")
+        db.create_collection("users")
         print("Collection 'users' created successfully.")
     else:
         print("Connected to existing collection 'users'.")
@@ -27,6 +27,7 @@ def insert_users(users):
 
 
 def insert_location(geo_data):
+    """Inserts an users location into the 'users' collection."""
 
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     db = client["relic"]
@@ -38,7 +39,6 @@ def insert_location(geo_data):
         print("Collection 'location' created successfully.")
     else:
         print("Connected to existing collection 'users'.")
-    """Inserts an users into the 'users' collection."""
 
     try:
         db.location_info.insert_one(geo_data)
