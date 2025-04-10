@@ -10,17 +10,20 @@ import pymongo
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# MongoDB setup for unique user_id check
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client["relic"]
-users_collection = db["users"]
 
 # Generate Unique UserId function
 def generate_unique_user_id():
-    while True:
-        user_id = 'USR_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-        if not users_collection.find_one({'user_id': user_id}):
-            return user_id
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = client["relic"]
+    user_counter_collection = db["user_counter"]
+    cursor = user_counter_collection.find_one({},{"count":1,"_id":0})
+    data = dict(cursor)
+    previous_user = data["count"]
+    new_user = previous_user + 1
+    user_counter_collection.update_one({"count": previous_user}, {"$set": {"count": new_user}})
+    return f"USR_{new_user}"
+    
+user_id = generate_unique_user_id()
 
 # Routes for homepage
 @app.route('/')
@@ -32,11 +35,10 @@ def home():
 def submit_user_info():
     data = request.form
     created_at = datetime.datetime.now()
-    user_id = generate_unique_user_id()
 
     user_data = {
         'user_id': user_id,
-        'user_name': data.get('user_name'),
+        'name': data.get('name'),
         'date_of_birth': data.get('date_of_birth'),
         'email': data.get('email'),
         'phone': data.get('phone'),
@@ -50,10 +52,11 @@ def submit_user_info():
         'created_at': created_at
     }
 
-    # print(f"Received name: {name}, age: {age}")
-    # insert_users({'name': name, 'age': age})
+
     insert_users(user_data)
-    return jsonify({"message": "User information submitted successfully!", "user_id": user_id})
+    # return jsonify({"message": "User information submitted successfully!", "user_id": user_id})
+    return  render_template('index.html',context={"message": "User information submitted successfully!", "user_id": user_id})
+
 
 # Routes for submit_device_info
 @app.route('/submit_device_info', methods=['POST'])
@@ -61,7 +64,7 @@ def submit_device_info():
     data = request.json
     device = data.get('device')
     location = data.get('location')
-    insert_location({'device': device, 'location': location})
+    insert_location({"user":user_id,'device': device, 'location': location})
     print(f"Received device: {device}, location: {location}")
     return jsonify({"message": "Device and location information received successfully!"})
 
